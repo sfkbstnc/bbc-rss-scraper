@@ -1,9 +1,11 @@
 """
-RSS feed fetching and parsing functionality.
+RSS feed fetching and parsing functionality using requests and BeautifulSoup4.
 """
-import feedparser
+import requests
+from bs4 import BeautifulSoup
 import logging
 from typing import List, Dict, Any, Optional
+from datetime import datetime
 
 # Configure logging
 logger = logging.getLogger('bbc-rss-scraper')
@@ -32,7 +34,7 @@ def load_feed_urls(file_path: str) -> List[str]:
 
 def fetch_feed(url: str) -> Optional[Dict[str, Any]]:
     """
-    Fetch and parse an RSS feed.
+    Fetch and parse an RSS feed using requests and BeautifulSoup4.
     
     Args:
         url: URL of the RSS feed
@@ -42,18 +44,69 @@ def fetch_feed(url: str) -> Optional[Dict[str, Any]]:
     """
     try:
         logger.info(f"Fetching feed: {url}")
-        feed = feedparser.parse(url)
         
-        if feed.get('bozo_exception'):
-            logger.warning(f"Malformed feed at {url}: {feed.get('bozo_exception')}")
+        # Make HTTP request to fetch the RSS feed
+        response = requests.get(url, timeout=30)
+        response.raise_for_status()  # Raise exception for 4XX/5XX responses
         
-        if not feed.get('entries'):
-            logger.warning(f"No entries found in feed: {url}")
+        # Parse XML content with BeautifulSoup
+        soup = BeautifulSoup(response.content, 'xml')
+        
+        # Extract channel information
+        channel = soup.find('channel')
+        if not channel:
+            logger.warning(f"No channel element found in feed: {url}")
+            return None
             
+        # Extract items
+        items = channel.find_all('item')
+        if not items:
+            logger.warning(f"No items found in feed: {url}")
+            
+        # Create feed dictionary similar to feedparser structure
+        feed = {
+            'feed': {
+                'title': get_text(channel.find('title')),
+                'link': get_text(channel.find('link')),
+                'description': get_text(channel.find('description'))
+            },
+            'entries': [],
+            'url': url
+        }
+        
+        # Parse each item and add to entries
+        for item in items:
+            entry = {
+                'title': get_text(item.find('title')),
+                'link': get_text(item.find('link')),
+                'published': get_text(item.find('pubDate')),
+                'description': get_text(item.find('description'))
+            }
+            feed['entries'].append(entry)
+            
+        logger.info(f"Successfully parsed feed with {len(feed['entries'])} entries")
         return feed
-    except Exception as e:
-        logger.error(f"Error fetching feed {url}: {str(e)}")
+        
+    except requests.RequestException as e:
+        logger.error(f"Request error fetching feed {url}: {str(e)}")
         return None
+    except Exception as e:
+        logger.error(f"Error parsing feed {url}: {str(e)}")
+        return None
+
+def get_text(element) -> str:
+    """
+    Extract text from a BeautifulSoup element safely.
+    
+    Args:
+        element: BeautifulSoup element
+        
+    Returns:
+        Text content or empty string if element is None
+    """
+    if element is None:
+        return ''
+    return element.get_text(strip=True)
 
 def extract_entries(feed: Dict[str, Any]) -> List[Dict[str, Any]]:
     """

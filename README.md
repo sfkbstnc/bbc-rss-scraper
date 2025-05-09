@@ -4,7 +4,8 @@ A simple Python application that fetches and parses RSS feeds from BBC News, ext
 
 ## Features
 
-- Fetches RSS feeds from configurable URLs
+- Fetches RSS feeds from configurable URLs using `requests`
+- Parses XML with `BeautifulSoup4` to extract structured data
 - Extracts title, link, publication date, and summary from each news entry
 - Saves collected news entries to a daily JSON file
 - Provides error handling for unreachable feeds
@@ -31,7 +32,9 @@ bbc-rss-scraper/
 ## Requirements
 
 - Python 3.9+
-- feedparser
+- requests
+- beautifulsoup4
+- lxml (for XML parsing)
 - python-dateutil
 
 ## Installation

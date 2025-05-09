@@ -1,23 +1,101 @@
-# Python cache files
+# Python cache
 __pycache__/
 *.py[cod]
 *$py.class
 
-# macOS files
+# macOS system files
 .DS_Store
 
-# Data directory contents (but keep the directory itself)
+# Virtual environments
+env/
+venv/
+.env/
+.venv/
+env.bak/
+venv.bak/
+ENV/
+
+# Bytecode, logs, etc.
+*.log
+*.so
+*.egg
+*.egg-info/
+.installed.cfg
+.Python
+
+# Build / distribution
+build/
+develop-eggs/
+dist/
+downloads/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.manifest
+*.spec
+MANIFEST
+
+# PyInstaller
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+.dmypy.json
+.dmypy.json
+.mypy_cache/
+
+# Django
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask
+instance/
+.webassets-cache
+
+# Scrapy
+.scrapy
+
+# Jupyter
+.ipynb_checkpoints
+
+# Spyder
+.spyderproject
+.spyproject
+
+# VSCode / PyCharm / Rope
+.vscode/
+.idea/
+.ropeproject/
+
+# PDM / Poetry / pipenv / pyenv
+.pdm.toml
+.poetry.lock
+Pipfile.lock
+.python-version
+
+# Cython debug
+cython_debug/
+
+# News data output
 data/*
 !data/.gitkeep
-
-# Virtual environments
-venv/
-env/
-.env/
-
-# IDE files
-.idea/
-.vscode/
-
-# Other
-*.log 

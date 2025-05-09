@@ -1,0 +1,23 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# macOS files
+.DS_Store
+
+# Data directory contents (but keep the directory itself)
+data/*
+!data/.gitkeep
+
+# Virtual environments
+venv/
+env/
+.env/
+
+# IDE files
+.idea/
+.vscode/
+
+# Other
+*.log 
